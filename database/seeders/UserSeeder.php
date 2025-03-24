@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
         $users = [
             [
                 'name' => 'Admin User',
-                'email' => 'admin@example.com',
+                'email' => 'admin@admin.com',
                 'email_verified_at' => Carbon::now(),
                 'password' => Hash::make('password123'),
                 'remember_token' => \Str::random(10),
@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'name' => 'Jane Doe',
-                'email' => 'jane.doe@example.com',
+                'email' => 'jane.doe@admin.com',
                 'email_verified_at' => null,
                 'password' => Hash::make('password123'),
                 'remember_token' => \Str::random(10),
@@ -36,7 +36,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'name' => 'John Smith',
-                'email' => 'john.smith@example.com',
+                'email' => 'john.smith@admin.com',
                 'email_verified_at' => Carbon::now(),
                 'password' => Hash::make('secret456'),
                 'remember_token' => \Str::random(10),
