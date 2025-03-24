@@ -25,7 +25,7 @@ return new class extends Migration
             $table->decimal('hole_price', 8, 2);
             $table->decimal('total_price', 8, 2);
             $table->string('status');
-            $table->timestamp('canceled_at')->nullable()->after('status');
+            $table->timestamp('canceled_at')->nullable();
             $table->timestamps();
         });
     }
