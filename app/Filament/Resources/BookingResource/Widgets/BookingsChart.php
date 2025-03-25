@@ -12,8 +12,8 @@ class BookingsChart extends ChartWidget
 
     protected function getData(): array
     {
-        $bookings = Booking::selectRaw('DATE(booking_date) as date, COUNT(*) as count')
-            ->where('booking_date', '>=', Carbon::now()->subDays(30))
+        $bookings = Booking::selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->where('created_at', '>=', Carbon::now()->subDays(30))
             ->groupBy('date')
             ->orderBy('date')
             ->get();

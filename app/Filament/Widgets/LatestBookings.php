@@ -19,14 +19,13 @@ class LatestBookings extends BaseWidget
     public function table(Table $table): Table
     {
         return $table
-            ->query(Booking::query()->latest()->limit(5)) // Show 5 most recent bookings
+            ->query(Booking::query()->latest()->limit(50)) // Show 5 most recent bookings
             ->columns([
                 TextColumn::make('course.course_name')
                     ->label('Course')
                     ->sortable(),
                 TextColumn::make('booking_date')
-                    ->label('Booking Date')
-                    ->sortable(),
+                    ->label('Booking Date'),
                 TextColumn::make('booking_time')
                     ->label('Time'),
                 TextColumn::make('location_city')

@@ -10,7 +10,8 @@ class CourseController extends Controller
 {
     public function index()
     {
-        return response()->json(Course::all());
+        $courses = Courses::where('visibility' , true)->get();
+        return response()->json($courses);
     }
 
     public function store(Request $request)
@@ -27,7 +28,7 @@ class CourseController extends Controller
             'discount' => 'nullable|numeric|min:0',
         ]);
 
-        $course = Course::create($validated);
+        $course = Courses::create($validated);
 
         return response()->json($course, 201);
     }

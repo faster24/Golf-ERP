@@ -6,17 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Customer extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable , HasFactory;
 
     protected $fillable = [
         'email',
         'full_name',
         'password',
         'profile_pic',
-        'phone'
+        'phone',
+        'linkedin_url',
+        'facebook_url',
+        'x_url',
+        'allowed_networking',
     ];
 
     protected $hidden = [
@@ -30,6 +35,6 @@ class Customer extends Authenticatable
 
     public function coupons()
     {
-        return $this->belongsToMany(Coupon::class , 'coupon_customer');
+        return $this->belongsToMany(Coupon::class, 'coupon_customer', 'user_id', 'coupon_id');
     }
 }

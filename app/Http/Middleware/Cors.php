@@ -23,17 +23,13 @@ class Cors
             '*'
         ];
 
-        // Get the request origin
         $origin = $request->header('Origin');
 
-        // Allow same-origin requests or requests without an Origin header
         if (!$origin || $origin === $request->getSchemeAndHttpHost()) {
             return $next($request);
         }
 
-        // Check if the origin is allowed
         if (in_array($origin, $allowedOrigins)) {
-            // Handle preflight OPTIONS requests
             if ($request->isMethod('OPTIONS')) {
                 return response('', 204)
                     ->header('Access-Control-Allow-Origin', $origin)

@@ -78,7 +78,7 @@ class CourseSeeder extends Seeder
                 'location_country' => $data['location_country'],
                 'description' => $data['description'],
                 'rating' => $data['rating'],
-                'image' => $data['image_url'],
+                'image_url' => $data['image_url'],
                 'discount' => $data['discount'],
                 'visibility' => $data['visibility'],
                 'is_featured' => $data['is_featured'],

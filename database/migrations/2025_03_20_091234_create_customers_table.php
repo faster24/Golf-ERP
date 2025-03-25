@@ -18,6 +18,10 @@ return new class extends Migration
             $table->string('password');
             $table->string('profile_pic')->nullable();
             $table->string('phone')->nullable();
+            $table->string('linkedin_url')->nullable();
+            $table->string('facebook_url')->nullable();
+            $table->string('x_url')->nullable();
+            $table->boolean('allowed_networking')->default(false);
             $table->timestamps();
         });
     }

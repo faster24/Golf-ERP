@@ -10,7 +10,13 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Courses extends Model implements HasMedia
 {
     use HasFactory , InteractsWithMedia;
+
     protected $table = "golf_courses";
+
+    protected $casts = [
+        'visibility' => 'boolean',
+        'is_featured' => 'boolean'
+    ];
 
     protected $fillable = [
         'course_name',
@@ -20,7 +26,9 @@ class Courses extends Model implements HasMedia
         'location_country',
         'description',
         'rating',
-        'image',
-        'discount'
+        'image_url',
+        'discount',
+        'visibility',
+        'is_featured'
     ];
 }

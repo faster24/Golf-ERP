@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('location_city');
             $table->string('location_country');
             $table->text('description');
-            $table->text('image');
+            $table->text('image_url')->nullable();
             $table->decimal('rating');
             $table->decimal('discount')->default(0);
             $table->boolean('visibility')->default(true);

@@ -16,6 +16,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Repeater;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Toggle;
 
@@ -89,25 +90,50 @@ class PackageResource extends Resource
                 TextColumn::make('price')
                     ->label('Price')
                     ->sortable()
-                    ->money('THB'), // Format as Thai Baht
+                    ->money('THB'),
 
                 TextColumn::make('features')
                     ->label('Features')
                     ->formatStateUsing(function ($state) {
-                        // Convert JSON to a comma-separated string
-                        return implode(', ', json_decode($state, true));
-                    })
-                    ->limit(50) // Limit the display length
-                    ->tooltip(function (TextColumn $column): ?string {
-                        $state = $column->getState();
-                        if (strlen($state) <= 50) {
-                            return null;
+                        // Handle the malformed JSON string
+                        if (!$state) {
+                            return '-';
                         }
-                        return $state; // Show full text on hover
+
+                        $features = explode(', ', str_replace(['\"', '{', '}'], '', $state));
+
+                        $featureList = array_map(function ($item) {
+                            $parts = explode(':', $item);
+                            return $parts[1] ?? $item; // Get value after "feature:"
+                        }, $features);
+
+                        return implode(', ', $featureList);
                     }),
+
+                IconColumn::make('visibility')
+                    ->label('Visibility')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-eye')
+                    ->falseIcon('heroicon-o-eye-slash')
+                    ->trueColor('success')
+                    ->falseColor('danger'),
+
+                IconColumn::make('is_featured')
+                    ->label('Featured')
+                    ->boolean()
+                    ->trueIcon('heroicon-s-star')
+                    ->falseIcon('heroicon-o-star')
+                    ->trueColor('warning')
+                    ->falseColor('amber'),
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('is_featured')
+                    ->label('Featured Courses')
+                    ->query(fn (Builder $query): Builder => $query->where('is_featured', true)),
+
+                Tables\Filters\Filter::make('visibility')
+                    ->label('Visible Courses')
+                    ->query(fn (Builder $query): Builder => $query->where('visibility', true)),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

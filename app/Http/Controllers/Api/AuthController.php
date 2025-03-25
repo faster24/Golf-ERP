@@ -56,11 +56,13 @@ class AuthController extends Controller
         ]);
     }
 
-    // Get authenticated user
     public function user(Request $request)
     {
+        $coupons = $request->user()->coupons;
+
         return response()->json([
-            'user' => $request->user()
+            'user' => $request->user(),
+            'coupon' => $coupons
         ]);
     }
 
@@ -78,7 +80,6 @@ class AuthController extends Controller
         return response()->json(['message' => 'Successfully logged out from all devices']);
     }
 
-    // Update user profile
     public function update(Request $request)
     {
         $user = $request->user();
@@ -88,6 +89,10 @@ class AuthController extends Controller
             'profile_pic' => 'nullable|string',
             'phone' => 'nullable|string',
             'password' => 'sometimes|required|string|min:8',
+            'linkedin_url'=> 'nullable|string',
+            'facebook_url'=> 'nullable|string',
+            'x_url'=> 'nullable|string',
+            'allowed_networking' => 'nullable|boolean',
         ]);
 
         if (isset($validated['password'])) {
@@ -99,36 +104,5 @@ class AuthController extends Controller
         return response()->json([
             'user' => $user
         ]);
-    }
-
-    public function redirectToProvider($provider)
-    {
-        return Socialite::driver($provider)->redirect();
-    }
-
-    public function handleProviderCallback($provider)
-    {
-        $socialUser = Socialite::driver($provider)->user();
-
-        // Check if the user already exists
-        $customer = Customer::where('provider', $provider)
-            ->where('provider_id', $socialUser->getId())
-            ->first();
-
-        if (!$customer) {
-            // Create a new customer if they don't exist
-            $customer = Customer::create([
-                'full_name' => $socialUser->getName(),
-                'email' => $socialUser->getEmail(),
-                'provider' => $provider,
-                'provider_id' => $socialUser->getId(),
-                'profile_pic' => $socialUser->getAvatar(),
-            ]);
-        }
-
-        // Log in the customer
-        Auth::login($customer, true);
-
-        return redirect('/dashboard'); // Redirect to the desired page
     }
 }

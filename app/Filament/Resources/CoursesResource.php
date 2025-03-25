@@ -20,12 +20,13 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\RichEditor;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
 class CoursesResource extends Resource
 {
     protected static ?string $model = Courses::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
+    protected static ?string $navigationIcon = 'heroicon-o-map';
 
     public static function form(Form $form): Form
     {
@@ -73,6 +74,10 @@ class CoursesResource extends Resource
                                     ->label('Description')
                                     ->placeholder('Provide a detailed course description')
                                     ->required(),
+
+                                SpatieMediaLibraryFileUpload::make('course_image')
+                                    ->collection('course-images')
+                                    ->responsiveImages(),
 
                                 Grid::make(2)
                                     ->schema([
@@ -157,10 +162,10 @@ class CoursesResource extends Resource
                 Tables\Columns\IconColumn::make('is_featured')
                     ->label('Featured')
                     ->boolean()
-                    ->trueIcon('heroicon-o-star')
+                    ->trueIcon('heroicon-s-star')
                     ->falseIcon('heroicon-o-star')
                     ->trueColor('warning')
-                    ->falseColor('gray'),
+                    ->falseColor('amber'),
             ])
             ->filters([
                 Tables\Filters\Filter::make('is_featured')

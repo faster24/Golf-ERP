@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('booking_time');
             $table->string('location_city');
             $table->string('location_country');
-            $table->foreignId('course_id')->constrained('golf_courses')->onDelete('cascade');
+            $table->unsignedBigInteger('course_id');
             $table->integer('golfers');
             $table->integer('holes');
             $table->unsignedBigInteger('package_id');

@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Controllers\Api\AttendeeController;
+use App\Http\Controllers\Api\CustomerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CourseController;
-use App\Http\Controllers\Api\CancelBookingController;
 use App\Http\Controllers\Api\BookingController;
+use App\Http\Controllers\Api\PackageController;
 
 Route::prefix('v1')->group(function () {
 
@@ -33,6 +34,14 @@ Route::prefix('v1')->group(function () {
 
         Route::prefix('attendee')->controller(AttendeeController::class)->group(function() {
             Route::post('/create' , 'store');
+        });
+
+        Route::prefix('packages')->controller(PackageController::class)->group(function() {
+            Route::get('/' , 'index');
+        });
+
+        Route::prefix('network')->controller(CustomerController::class)->group(function() {
+            Route::get('/' , 'index');
         });
     });
 });
