@@ -26,8 +26,9 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('bookings', BookingController::class);
 
         Route::prefix('bookings')->controller(BookingController::class)->group(function() {
-            Route::get('/customer/{customer_id}' , 'getBookingByCustomer');
+            Route::get('/{customer_id}/customer' , 'getBookingByCustomer');
             Route::get('/{bookingId}/cancel' , 'cancelBooking');
+            Route::get('/{customer_id}/customer' , 'getCancelBookingByCustomer');
         });
 
         Route::prefix('attendee')->controller(AttendeeController::class)->group(function() {

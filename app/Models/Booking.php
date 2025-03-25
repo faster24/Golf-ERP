@@ -23,6 +23,7 @@ class Booking extends Model
         'hole_price',
         'total_price',
         'coupon_id',
+        'status',
     ];
 
     protected $casts = [

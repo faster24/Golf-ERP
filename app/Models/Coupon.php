@@ -20,15 +20,15 @@ class Coupon extends Model
 
     public function isValid(): bool
     {
-        return (!$this->expires_at || $this->expires_at->isFuture()) &&
-               ($this->usage_limit === 0 || $this->times_used < $this->usage_limit);
+        return $this->is_active &&
+               $this->expiration_date->isFuture();
     }
 
     public function applyDiscount(float $amount): float
     {
-        if ($this->discount_percentage) {
-            return $amount * (1 - $this->discount_percentage / 100);
+        if ($this->discount_type === 'percentage') {
+            return $amount * (1 - $this->discount_value / 100);
         }
-        return max(0, $amount - $this->discount);
+        return max(0, $amount - $this->discount_value);
     }
 }

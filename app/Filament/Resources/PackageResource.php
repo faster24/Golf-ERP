@@ -16,6 +16,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Repeater;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Toggle;
 
 class PackageResource extends Resource
 {
@@ -27,6 +29,8 @@ class PackageResource extends Resource
     {
         return $form
             ->schema([
+                Section::make("Package Information")
+                    ->schema([
                 TextInput::make('name')
                     ->label('Package Name')
                     ->placeholder('Enter package name')
@@ -54,7 +58,23 @@ class PackageResource extends Resource
                     ->collapsible() // Allow collapsing the repeater
                     ->columnSpan(2)
                     ->helperText('Add all the features included in this package.'),
-            ]);
+                    ])
+                    ->columnSpan(['lg' => 2]),
+
+                Section::make("Visibility & Status")
+                    ->schema([
+                        Toggle::make('visibility')
+                            ->label('Visibility')
+                            ->helperText('Enable to display this course on the website')
+                            ->default(true),
+
+                        Toggle::make('is_featured')
+                            ->label('Featured')
+                            ->helperText('Enable to highlight this course as a featured one')
+                            ->default(false),
+                    ])
+                    ->columnSpan(['lg' => 1]),
+            ])->columns(3);
     }
 
     public static function table(Table $table): Table

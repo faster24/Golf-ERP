@@ -147,4 +147,8 @@ class AttendeeResource extends Resource
         ];
     }
 
+   public static function canCreate(): bool
+    {
+        return false;
+    }
 }

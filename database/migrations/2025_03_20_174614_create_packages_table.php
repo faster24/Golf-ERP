@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->decimal('price', 10, 2);
             $table->json('features');
+            $table->boolean('visibility')->default(true);
+            $table->boolean('is_featured')->default(false);
             $table->timestamps();
         });
     }

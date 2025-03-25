@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\Coupon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -37,14 +38,37 @@ class BookingController extends Controller
             'hole_price' => 'required|numeric|min:0',
             'total_price' => 'required|numeric|min:0',
             'status' => 'required|string',
+            'coupon_code' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-        // Create the booking
-        $booking = Booking::create($request->all());
+        $data = $request->all();
+
+        $basePrice = $data['hole_price'] * $data['golfers'] * $data['holes'];
+
+        if ($request->filled('coupon_code')) {
+            $coupon = Coupon::where('code', $data['coupon_code'])->first();
+
+            if (!$coupon) {
+                return response()->json(['coupon_code' => ['The provided coupon code does not exist.']], 422);
+            }
+
+            if (!$coupon->isValid()) {
+                return response()->json(['coupon_code' => ['The coupon is inactive, expired, or has reached its usage limit.']], 422);
+            }
+
+            $data['total_price'] = $coupon->applyDiscount($basePrice);
+            $data['coupon_id'] = $coupon->id;
+        } else {
+            $data['total_price'] = $basePrice;
+        }
+
+        unset($data['coupon_code']);
+
+        $booking = Booking::create($data);
 
         return response()->json($booking, 201);
     }
@@ -130,7 +154,18 @@ class BookingController extends Controller
 
     public function getBookingByCustomer($customer_id)
     {
-        $bookings = Booking::where('customer_id' , $customer_id)->get();
+        $bookings = Booking::where('customer_id', $customer_id)
+            ->where('status', 'confirmed')
+            ->get();
+
+        return response()->json([
+            'bookings' => $bookings
+        ]);
+    }
+
+    public function getCancelBookingByCustomer($customer_id)
+    {
+        $bookings = Booking::where('customer_id' , $customer_id)->where('status', 'canceled')->get();
 
         return response()->json([
             'bookings' => $bookings

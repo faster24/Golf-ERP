@@ -33,7 +33,6 @@ class CoursesResource extends Resource
             ->schema([
                 Section::make("Course Infomations")
                     ->schema([
-
                         Grid::make(2)
                             ->schema([
                                 TextInput::make('course_name')

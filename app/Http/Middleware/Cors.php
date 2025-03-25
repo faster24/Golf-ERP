@@ -15,41 +15,47 @@ class Cors
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Define the allowed origin(s)
-        $allowedOrigins = ['http://localhost:3001', 'http://localhost:8000' , 'https://cismo-main-bbgu3m.laravel.cloud'];
+        // Define allowed origins
+        $allowedOrigins = [
+            'http://localhost:3001',
+            'http://localhost:8000',
+            'https://cismo-main-bbgu3m.laravel.cloud',
+            '*'
+        ];
 
         // Get the request origin
         $origin = $request->header('Origin');
 
-        // Allow requests without an Origin header (e.g., same-origin requests)
-        if (!$origin) {
+        // Allow same-origin requests or requests without an Origin header
+        if (!$origin || $origin === $request->getSchemeAndHttpHost()) {
             return $next($request);
         }
 
-        // Check if the request origin is allowed
+        // Check if the origin is allowed
         if (in_array($origin, $allowedOrigins)) {
-            // Add CORS headers to the response
-            $response = $next($request);
-
-            $response->headers->set('Access-Control-Allow-Origin', $origin);
-            $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
-            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-            $response->headers->set('Access-Control-Allow-Credentials', 'true'); // Allow credentials if needed
-
-            // Handle preflight requests
+            // Handle preflight OPTIONS requests
             if ($request->isMethod('OPTIONS')) {
-                // For preflight requests, return an empty response with the CORS headers
                 return response('', 204)
                     ->header('Access-Control-Allow-Origin', $origin)
                     ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
-                    ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
-                    ->header('Access-Control-Allow-Credentials', 'true');
+                    ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, X-Livewire, Accept')
+                    ->header('Access-Control-Allow-Credentials', 'true')
+                    ->header('Access-Control-Max-Age', '86400'); // Cache preflight for 24 hours
             }
+
+            // Process the actual request
+            $response = $next($request);
+
+            // Add CORS headers to the response
+            $response->headers->set('Access-Control-Allow-Origin', $origin);
+            $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, X-Livewire, Accept');
+            $response->headers->set('Access-Control-Allow-Credentials', 'true');
 
             return $response;
         }
 
-        // If the origin is not allowed, return a 403 response
+        // Deny requests from unallowed origins
         return response('Forbidden', 403)
             ->header('Content-Type', 'text/plain');
     }
