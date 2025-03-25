@@ -16,7 +16,7 @@ class Cors
     public function handle(Request $request, Closure $next): Response
     {
         // Define the allowed origin(s)
-        $allowedOrigins = ['http://localhost:3001', 'http://localhost:8000'];
+        $allowedOrigins = ['http://localhost:3001', 'http://localhost:8000' , 'https://cismo-main-bbgu3m.laravel.cloud'];
 
         // Get the request origin
         $origin = $request->header('Origin');
