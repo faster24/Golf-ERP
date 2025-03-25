@@ -27,4 +27,9 @@ class Customer extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function coupons()
+    {
+        return $this->belongsToMany(Coupon::class , 'coupon_customer');
+    }
 }

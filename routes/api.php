@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AttendeeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CourseController;
@@ -27,6 +28,10 @@ Route::prefix('v1')->group(function () {
         Route::prefix('bookings')->controller(BookingController::class)->group(function() {
             Route::get('/customer/{customer_id}' , 'getBookingByCustomer');
             Route::get('/{bookingId}/cancel' , 'cancelBooking');
+        });
+
+        Route::prefix('attendee')->controller(AttendeeController::class)->group(function() {
+            Route::post('/create' , 'store');
         });
     });
 });

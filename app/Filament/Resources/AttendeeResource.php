@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CustomerResource\Pages;
-use App\Filament\Resources\CustomerResource\RelationManagers;
-use App\Models\Customer;
+use App\Filament\Resources\AttendeeResource\Pages;
+use App\Filament\Resources\AttendeeResource\RelationManagers;
+use App\Models\Attendee;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,27 +12,26 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
-use Filament\Tables\Actions\BulkAction;
-use App\Models\User;
-use App\Models\Coupon;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Collection;
 use Filament\Forms\Components\Select;
 use Illuminate\Support\Facades\Http;
 use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
+use App\Models\Customer;
 
-class CustomerResource extends Resource
+class AttendeeResource extends Resource
 {
-    protected static ?string $model = Customer::class;
+    protected static ?string $model = Attendee::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
+                //
             ]);
     }
 
@@ -40,24 +39,17 @@ class CustomerResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('full_name')
-                    ->label('Name')
-                    ->sortable()
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('email')
-                    ->label('Email')
-                    ->sortable()
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('phone')
-                    ->label('phone')
-                    ->sortable()
-                    ->searchable(),
-
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Joined at')
-                    ->since()
+                TextColumn::make('tournament')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('name')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('email')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('phone')
+                    ->searchable()
                     ->sortable(),
             ])
             ->filters([
@@ -98,8 +90,7 @@ class CustomerResource extends Resource
                             ->default('Bangkok')
                             ->required(),
                     ])
-                    ->action(function (Customer $record, array $data) {
-                        // Prepare the payload for this specific user
+                    ->action(function (array $data) {
                         $payload = [
                             'playerName' => $data['playerName'],
                             'email' => $data['email'],
@@ -134,35 +125,8 @@ class CustomerResource extends Resource
                     ->requiresConfirmation(),
             ])
             ->bulkActions([
-                BulkAction::make('assignCoupon')
-                    ->label('Assign Existing Coupon')
-                    ->icon('heroicon-o-ticket')
-                    ->form([
-                        Select::make('coupon_id')
-                            ->label('Select Coupon')
-                            ->options(Coupon::pluck('code', 'id')->toArray()) // Lists all coupons by their code
-                            ->searchable() // Optional: Makes it easier to find a coupon
-                            ->required(),
-                    ])
-                    ->action(function (Collection $records, array $data) {
-                        // Get the selected coupon
-                        $coupon = Coupon::find($data['coupon_id']);
-
-                        // Assign the coupon to the selected users
-                        $coupon->users()->attach($records->pluck('id'));
-
-                        // Notify the admin
-                        \Filament\Notifications\Notification::make()
-                            ->title('Coupon Assigned')
-                            ->body("Coupon {$coupon->code} assigned to " . $records->count() . " users.")
-                            ->success()
-                            ->send();
-                    })
-                    ->requiresConfirmation()
-                    ->deselectRecordsAfterCompletion(),
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                    ExportBulkAction::make(),
                 ]),
             ]);
     }
@@ -177,25 +141,9 @@ class CustomerResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCustomers::route('/'),
-            'create' => Pages\CreateCustomer::route('/create'),
+            'index' => Pages\ListAttendees::route('/'),
+            'create' => Pages\CreateAttendee::route('/create'),
+            'edit' => Pages\EditAttendee::route('/{record}/edit'),
         ];
     }
-
-    public static function canCreate(): bool
-    {
-        return false;
-    }
-
-    protected function sendCertificateEmail(array $data)
-    {
-        $response = Http::post('https://cimso-golf-booking-demo.onrender.com/v1/api/emails/send-email-certificate', $data);
-
-        if ($response->successful()) {
-            return true;
-        }
-
-        throw new \Exception('Failed to send certificate email: ' . $response->body());
-    }
-
 }

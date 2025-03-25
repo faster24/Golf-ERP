@@ -12,4 +12,9 @@ class Coupon extends Model
         'is_active' => 'boolean',
         'expiration_date' => 'date',
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'coupon_customer');
+    }
 }

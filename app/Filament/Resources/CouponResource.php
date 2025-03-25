@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\Actions\Action;
 
 class CouponResource extends Resource
 {
@@ -26,7 +27,19 @@ class CouponResource extends Resource
                 Forms\Components\TextInput::make('code')
                     ->required()
                     ->maxLength(20)
-                    ->unique(Coupon::class, 'code'),
+                    ->maxLength(255)
+                    ->suffixAction(
+                        Action::make('generate')
+                            ->icon('heroicon-o-sparkles')
+                            ->action(function ($set) {
+                                $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                                $code = '';
+                                for ($i = 0; $i < 8; $i++) {
+                                    $code .= $characters[rand(0, strlen($characters) - 1)];
+                                }
+                                $set('code', $code);
+                            })
+                    ),
                 Forms\Components\Select::make('discount_type')
                     ->options([
                         'percentage' => 'Percentage',
