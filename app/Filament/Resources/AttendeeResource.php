@@ -146,4 +146,5 @@ class AttendeeResource extends Resource
             'edit' => Pages\EditAttendee::route('/{record}/edit'),
         ];
     }
+
 }
