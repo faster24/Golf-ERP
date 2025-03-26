@@ -33,7 +33,7 @@ class CourseController extends Controller
         return response()->json($course, 201);
     }
 
-    public function show(Course $course)
+    public function show(Courses $course)
     {
         return response()->json($course);
     }
