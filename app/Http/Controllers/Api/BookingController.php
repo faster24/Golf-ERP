@@ -74,18 +74,6 @@ class BookingController extends Controller
     }
 
     /**
-     * Display the specified booking.
-     */
-    public function show($id)
-    {
-        $booking = Booking::find($id);
-        if (!$booking) {
-            return response()->json(['message' => 'Booking not found'], 404);
-        }
-        return response()->json($booking);
-    }
-
-    /**
      * Update the specified booking.
      */
     public function update(Request $request, $id)

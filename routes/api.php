@@ -29,13 +29,14 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::middleware('auth:sanctum')->group(function() {
-        Route::apiResource('bookings', BookingController::class);
 
         Route::prefix('bookings')->controller(BookingController::class)->group(function() {
             Route::get('/{customer_id}/customer' , 'getBookingByCustomer');
             Route::get('/{bookingId}/cancel' , 'cancelBooking');
-            Route::get('/{customer_id}/customer' , 'getCancelBookingByCustomer');
+            Route::get('/cancel/{customer_id}/customer' , 'getCancelBookingByCustomer');
         });
+
+        Route::apiResource('bookings', BookingController::class);
 
         Route::prefix('attendee')->controller(AttendeeController::class)->group(function() {
             Route::post('/create' , 'store');
