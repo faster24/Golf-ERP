@@ -138,7 +138,9 @@ class BookingController extends Controller
 
     public function getBookingByCustomer($customer_id)
     {
-        $bookings = Booking::where('customer_id', $customer_id)->get();
+        $bookings = Booking::with(['course', 'package'])
+            ->where('customer_id', $customer_id)
+            ->get();
 
         return response()->json([
             'bookings' => $bookings
