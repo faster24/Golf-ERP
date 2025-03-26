@@ -13,9 +13,9 @@ class Coupon extends Model
         'expiration_date' => 'date',
     ];
 
-    public function users()
+    public function customer()
     {
-        return $this->belongsToMany(Customer::class, 'coupon_customer');
+        return $this->belongsToMany(Customer::class, 'coupon_customer' , 'coupon_id' , 'customer_id');
     }
 
     public function isValid(): bool

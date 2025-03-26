@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use Filament\Tables\Actions\BulkAction;
-use App\Models\User;
 use App\Models\Coupon;
 use Illuminate\Database\Eloquent\Collection;
 use Filament\Forms\Components\Select;
@@ -82,7 +81,7 @@ class CustomerResource extends Resource
                         $coupon = Coupon::find($data['coupon_id']);
 
                         // Assign the coupon to the selected users
-                        $coupon->users()->attach($records->pluck('id'));
+                        $coupon->customer()->attach($records->pluck('id'));
 
                         // Notify the admin
                         \Filament\Notifications\Notification::make()
