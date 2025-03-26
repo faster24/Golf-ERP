@@ -22,8 +22,9 @@ Route::prefix('v1')->group(function () {
         });
     });
 
+    Route::apiResource('courses', CourseController::class);
+
     Route::middleware('auth:sanctum')->group(function() {
-        Route::apiResource('courses', CourseController::class);
         Route::apiResource('bookings', BookingController::class);
 
         Route::prefix('bookings')->controller(BookingController::class)->group(function() {
