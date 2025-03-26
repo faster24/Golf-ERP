@@ -36,6 +36,6 @@ class Customer extends Authenticatable
 
     public function coupons()
     {
-        return $this->belongsToMany(Coupon::class, 'coupon_customer', 'user_id', 'coupon_id');
+        return $this->belongsToMany(Coupon::class, 'coupon_customer', 'customer_id', 'coupon_id');
     }
 }
