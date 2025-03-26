@@ -27,7 +27,7 @@ class CustomerFactory extends Factory
             'full_name' => $this->faker->name(),
             'password' => Hash::make('password'),
             'profile_pic' => $this->faker->optional()->imageUrl(200, 200, 'people'),
-            'phone' => $this->faker->optional()->phoneNumber(),
+            'phone' => $this->faker->phoneNumber(),
             'created_at' => $created_at,
             'updated_at' => $updated_at
         ];

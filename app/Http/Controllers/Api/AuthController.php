@@ -65,7 +65,10 @@ class AuthController extends Controller
 
     public function user(Request $request)
     {
-        $coupons = $request->user()->coupons;
+        $coupons = $request->user()->coupons()->where('is_active' , true)->where(function($query) {
+            $query->whereNull('expiration_date')
+                  ->orWhere('expiration_date', '>', now());
+        })->get();
 
         return response()->json([
             'user' => $request->user(),
