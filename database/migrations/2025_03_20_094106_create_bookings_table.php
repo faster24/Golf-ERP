@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('course_id');
             $table->integer('golfers');
             $table->integer('holes');
-            $table->unsignedBigInteger('package_id');
+            $table->unsignedBigInteger('package_id')->nullable();
             $table->decimal('hole_price', 8, 2);
             $table->decimal('total_price', 8, 2);
             $table->string('status');

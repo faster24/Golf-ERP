@@ -34,7 +34,7 @@ class BookingController extends Controller
             'course_id' => 'required|exists:golf_courses,id',
             'golfers' => 'required|integer|min:1',
             'holes' => 'required|integer|min:9|max:18',
-            'package_id' => 'required|exists:packages,id',
+            'package_id' => 'nullable|exists:packages,id',
             'hole_price' => 'required|numeric|min:0',
             'total_price' => 'required|numeric|min:0',
             'status' => 'required|string',
