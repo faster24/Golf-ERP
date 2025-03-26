@@ -38,33 +38,13 @@ class BookingController extends Controller
             'hole_price' => 'required|numeric|min:0',
             'total_price' => 'required|numeric|min:0',
             'status' => 'required|string',
-            'coupon_code' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-        $data = $request->all();
-
-        if ($request->filled('coupon_code')) {
-            $coupon = Coupon::where('code', $data['coupon_code'])->first();
-
-            if (!$coupon) {
-                return response()->json(['coupon_code' => ['The provided coupon code does not exist.']], 422);
-            }
-
-            if (!$coupon->isValid()) {
-                return response()->json(['coupon_code' => ['The coupon is inactive, expired, or has reached its usage limit.']], 422);
-            }
-
-            $data['total_price'] = $coupon->applyDiscount($data['total_price']);
-            $data['coupon_id'] = $coupon->id;
-        }
-
-        unset($data['coupon_code']);
-
-        $booking = Booking::create($data);
+        $booking = Booking::create($request->all());
 
         return response()->json($booking, 201);
     }
