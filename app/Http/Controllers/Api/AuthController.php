@@ -112,4 +112,23 @@ class AuthController extends Controller
             'user' => $user
         ]);
     }
+
+    public function oauthLogin(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => 'required|email|unique:users,email',
+            'full_name' => 'required|string|max:255',
+            'password' => 'required|string|min:8',
+            'profile_pic' => 'nullable|string',
+            'phone' => 'nullable|string',
+        ]);
+
+        $validated['password'] = Hash::make($validated['password']);
+        $customer = Customer::create($validated);
+        $token = $customer->createToken('auth-token')->plainTextToken;
+
+        return response()->json([ 'customer' => $customer,
+            'token' => $token
+        ], 201);
+    }
 }

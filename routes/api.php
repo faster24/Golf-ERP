@@ -14,6 +14,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/register', 'register');
         Route::post('/login', 'login');
 
+        Route::post('/google/signIn', 'oauthLogin');
+
         Route::middleware('auth:sanctum')->group(function () {
             Route::get('/user', 'user');
             Route::put('/user', 'update');
