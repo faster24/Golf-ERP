@@ -91,22 +91,29 @@ class AuthController extends Controller
     {
         $user = $request->user();
 
-        $validated = $request->validate([
-            'full_name' => 'sometimes|required|string|max:255',
-            'profile_pic' => 'nullable|string',
-            'phone' => 'nullable|string',
-            'bio' => 'nullable|string',
-            'password' => 'sometimes|required|string|min:8',
-            'linkedin_url'=> 'nullable|string',
-            'facebook_url'=> 'nullable|string',
-            'x_url'=> 'nullable|string',
-            'allowed_networking' => 'nullable|boolean',
-        ]);
+        try {
+            $validated = $request->validate([
+                'full_name' => 'sometimes|required|string|max:255',
+                'profile_pic' => 'nullable|string',
+                'phone' => 'nullable|string',
+                'bio' => 'nullable|string',
+                'password' => 'sometimes|required|string|min:8',
+                'linkedin_url'=> 'nullable|string',
+                'facebook_url'=> 'nullable|string',
+                'x_url'=> 'nullable|string',
+                'allowed_networking' => 'nullable|boolean',
+            ]);
 
-        if (isset($validated['password'])) {
-            $validated['password'] = Hash::make($validated['password']);
+            if (isset($validated['password'])) {
+                $validated['password'] = Hash::make($validated['password']);
+            }
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $e->errors()
+            ], 422);
         }
-
         $user->update($validated);
 
         return response()->json([
