@@ -24,6 +24,10 @@ Route::prefix('v1')->group(function () {
 
     Route::apiResource('courses', CourseController::class);
 
+    Route::prefix('packages')->controller(PackageController::class)->group(function() {
+        Route::get('/' , 'index');
+    });
+
     Route::middleware('auth:sanctum')->group(function() {
         Route::apiResource('bookings', BookingController::class);
 
@@ -35,10 +39,6 @@ Route::prefix('v1')->group(function () {
 
         Route::prefix('attendee')->controller(AttendeeController::class)->group(function() {
             Route::post('/create' , 'store');
-        });
-
-        Route::prefix('packages')->controller(PackageController::class)->group(function() {
-            Route::get('/' , 'index');
         });
 
         Route::prefix('network')->controller(CustomerController::class)->group(function() {
