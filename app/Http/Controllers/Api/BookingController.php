@@ -27,8 +27,8 @@ class BookingController extends Controller
         // Validate the request
         $validator = Validator::make($request->all(), [
             'customer_id' => 'required|exists:customers,id',
-            'booking_date' => 'required|date',
-            'booking_time' => 'required|date_format:H:i',
+            'booking_date' => 'required',
+            'booking_time' => 'required|date_format:H:i:A',
             'location_city' => 'required|string|max:255',
             'location_country' => 'required|string|max:255',
             'course_id' => 'required|exists:golf_courses,id',
