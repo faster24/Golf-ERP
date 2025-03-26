@@ -27,7 +27,6 @@ class CouponResource extends Resource
                 Forms\Components\TextInput::make('code')
                     ->required()
                     ->maxLength(20)
-                    ->maxLength(255)
                     ->suffixAction(
                         Action::make('generate')
                             ->icon('heroicon-o-sparkles')
@@ -40,26 +39,27 @@ class CouponResource extends Resource
                                 $set('code', $code);
                             })
                     ),
-                Forms\Components\Select::make('discount_type')
-                    ->options([
-                        'percentage' => 'Percentage',
-                        'fixed' => 'Fixed Amount',
-                    ])
-                    ->required(),
-                Forms\Components\TextInput::make('discount_value')
-                    ->required()
-                    ->numeric()
-                    ->minValue(0)
-                    ->label('Discount Value (e.g., 25 for 25% or $25)'),
-                Forms\Components\DatePicker::make('expiration_date')
-                    ->required()
-                    ->minDate(now()),
-                Forms\Components\Toggle::make('is_active')
-                    ->default(true),
-                Forms\Components\TextInput::make('usage_limit')
-                    ->numeric()
-                    ->minValue(1)
-                    ->nullable(),
+
+                    Forms\Components\TextInput::make('discount_value')
+                        ->required()
+                        ->numeric()
+                        ->minValue(0)
+                        ->label('Discount Value (%)')
+                        ->suffix('%'),
+
+                    Forms\Components\DatePicker::make('expiration_date')
+                        ->required()
+                        ->minDate(now())
+                        ->native(false)
+                        ->displayFormat('M d, Y'),
+
+                    Forms\Components\Toggle::make('is_active')
+                        ->default(true)
+                        ->inline(false)
+                        ->onColor('success')
+                        ->offColor('danger')
+                        ->label('Active Status')
+                        ->columnSpan(1),
             ]);
     }
 
@@ -68,22 +68,16 @@ class CouponResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('code')->sortable()->searchable(),
-                Tables\Columns\TextColumn::make('discount_type')->sortable(),
                 Tables\Columns\TextColumn::make('discount_value')
                     ->formatStateUsing(fn ($state, $record) => $record->discount_type === 'percentage' ? "{$state}%" : "\${$state}"),
                 Tables\Columns\TextColumn::make('expiration_date')->date()->sortable(),
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean()
                     ->label('Active'),
-                Tables\Columns\TextColumn::make('usage_limit')->default('Unlimited'),
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable(),
+                Tables\Columns\TextColumn::make('updated_at')->dateTime()->sortable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('discount_type')
-                    ->options([
-                        'percentage' => 'Percentage',
-                        'fixed' => 'Fixed Amount',
-                    ]),
                 Tables\Filters\TernaryFilter::make('is_active'),
             ])
             ->actions([
