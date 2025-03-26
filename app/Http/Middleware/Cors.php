@@ -20,6 +20,7 @@ class Cors
             'http://localhost:3001',
             'http://localhost:8000',
             'https://cismo-main-bbgu3m.laravel.cloud',
+            'https://cimso-online-golf-booking.onrender.com',
             '*'
         ];
 
