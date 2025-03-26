@@ -93,20 +93,15 @@ class AuthController extends Controller
 
         try {
         $validated = $request->validate([
-            'full_name' => 'sometimes|required|string|max:255',
+            'full_name' => 'nullable|string',
             'profile_pic' => 'nullable|string',
             'phone' => 'nullable|string',
             'bio' => 'nullable|string',
-            'password' => 'nullable|string',
             'linkedin_url'=> 'nullable|string',
             'facebook_url'=> 'nullable|string',
             'x_url'=> 'nullable|string',
             'allowed_networking' => 'nullable|boolean',
         ]);
-
-        if (isset($validated['password'])) {
-            $validated['password'] = Hash::make($validated['password']);
-        }
 
         } catch (ValidationException $e) {
             return response()->json([
@@ -114,6 +109,7 @@ class AuthController extends Controller
                 'errors' => $e->errors()
             ], 422);
         }
+
         $user->update($validated);
 
         return response()->json([
