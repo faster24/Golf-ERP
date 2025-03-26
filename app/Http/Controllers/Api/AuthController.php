@@ -65,9 +65,7 @@ class AuthController extends Controller
 
     public function user(Request $request)
     {
-        $coupons = $request->user();
-
-        dd($coupons->coupons);
+        $coupons = $request->user()->coupons;
 
         return response()->json([
             'user' => $request->user(),
