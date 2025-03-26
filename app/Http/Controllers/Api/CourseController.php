@@ -8,9 +8,19 @@ use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $courses = Courses::where('visibility' , true)->get();
+        $query = Courses::where('visibility', true);
+
+        if ($request->has('course_name') && !empty($request->course_name)) {
+            $query->where('course_name', 'like', '%' . $request->course_name . '%');
+        }
+
+        if ($request->has('location_city') && !empty($request->location_city)) {
+            $query->where('location_city', 'like', '%' . $request->location_city . '%');
+        }
+
+        $courses = $query->get();
         return response()->json($courses);
     }
 

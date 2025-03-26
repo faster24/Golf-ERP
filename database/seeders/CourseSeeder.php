@@ -23,7 +23,7 @@ class CourseSeeder extends Seeder
                 'country' => 'Thailand',
                 'description' => 'Amata Spring is known for its exclusive atmosphere and its challenging 18-hole layout. The course offers wide fairways and large greens, surrounded by serene lakes and carefully designed bunkers. The course has hosted multiple international tournaments, making it one of Thailand\'s premier golfing destinations. Golfers can expect a visually stunning and strategically demanding experience.',
                 'image_url' => 'https://res.cloudinary.com/dt28nxrrx/image/upload/v1740416673/6_wqlcd1.jpg',
-                'rating' => 4.8,
+                'rating' => 4.9,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
