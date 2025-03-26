@@ -10,7 +10,7 @@ class CustomerController extends Controller
 {
     public function index()
     {
-        $customers = Customer::where('allowed_networking' , true)->paginate(5);
+        $customers = Customer::where('id', '!=', auth()->user()->id)->get();
         return response()->json($customers);
     }
 }

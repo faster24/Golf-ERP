@@ -18,6 +18,7 @@ class Customer extends Authenticatable
         'password',
         'profile_pic',
         'phone',
+        'bio',
         'linkedin_url',
         'facebook_url',
         'x_url',

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('full_name');
             $table->string('password');
+            $table->text('bio')->nullable();
             $table->string('profile_pic')->nullable();
             $table->string('phone')->nullable();
             $table->string('linkedin_url')->nullable();

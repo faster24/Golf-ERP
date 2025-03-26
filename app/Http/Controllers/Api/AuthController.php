@@ -95,6 +95,7 @@ class AuthController extends Controller
             'full_name' => 'sometimes|required|string|max:255',
             'profile_pic' => 'nullable|string',
             'phone' => 'nullable|string',
+            'bio' => 'nullable|string',
             'password' => 'sometimes|required|string|min:8',
             'linkedin_url'=> 'nullable|string',
             'facebook_url'=> 'nullable|string',
