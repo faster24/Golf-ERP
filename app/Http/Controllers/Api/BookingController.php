@@ -47,8 +47,6 @@ class BookingController extends Controller
 
         $data = $request->all();
 
-        $basePrice = $data['hole_price'] * $data['golfers'] * $data['holes'];
-
         if ($request->filled('coupon_code')) {
             $coupon = Coupon::where('code', $data['coupon_code'])->first();
 
@@ -60,10 +58,8 @@ class BookingController extends Controller
                 return response()->json(['coupon_code' => ['The coupon is inactive, expired, or has reached its usage limit.']], 422);
             }
 
-            $data['total_price'] = $coupon->applyDiscount($basePrice);
+            $data['total_price'] = $coupon->applyDiscount($data['total_price']);
             $data['coupon_id'] = $coupon->id;
-        } else {
-            $data['total_price'] = $basePrice;
         }
 
         unset($data['coupon_code']);
