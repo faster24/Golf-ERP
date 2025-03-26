@@ -61,4 +61,11 @@ class CourseController extends Controller
         $course->delete();
         return response()->json(['message' => 'Course deleted successfully']);
     }
+
+    public function getFeaturedCourses()
+    {
+        $courses = Courses::where('is_featured' , true)->paginate(4);
+
+        return response()->json($courses);
+    }
 }

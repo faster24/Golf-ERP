@@ -22,6 +22,10 @@ Route::prefix('v1')->group(function () {
         });
     });
 
+    Route::prefix('courses')->controller(CourseController::class)->group(function() {
+        Route::get('/featured' , 'getFeaturedCourses');
+    });
+
     Route::apiResource('courses', CourseController::class);
 
     Route::prefix('packages')->controller(PackageController::class)->group(function() {

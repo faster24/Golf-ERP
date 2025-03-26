@@ -15,7 +15,7 @@ class Coupon extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'coupon_customer');
+        return $this->belongsToMany(Customer::class, 'coupon_customer');
     }
 
     public function isValid(): bool
